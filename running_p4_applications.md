@@ -15,6 +15,7 @@ calc          link_monitor  mri_runtime   qos
 **3. To execute a specific application, such as the basic packet forwarding application, navigate to the "basic" directory and initiate the process by running the command "make run."**
 
 cd basic
+
 make run
 
 **4. To run my DDoS detection and mitigation application, please copy the "anomaly_detection" folder from the repository to the "~/tutorials/exercises/" directory. Subsequently, execute it in the same manner as the other applications.**
