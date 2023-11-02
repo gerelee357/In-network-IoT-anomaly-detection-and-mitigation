@@ -11,7 +11,7 @@ The solution utilizes In-band Network telemetry (INT) data to address the challe
 
 - High Detection Accuracy: Achieves high detection accuracy, enhancing the security posture of IoT devices within the network.
 
-  # Publications
+# Publications
 
 The result of this work was presented and discussed at the IEEE 16th International Scientific Conference on Informatics (Informatics 2022) conference and published in IEEE Informatics 2022 conference proceeding [1]. Furthermore, I developed
 an extended article for publication in Acta Electrotechnica et Informatica, providing a more comprehensive and detailed account of my research findings [2]. If you need more detailed information, please access the publications. 
