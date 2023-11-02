@@ -18,7 +18,7 @@ cd basic
 
 make run
 
-**4. To run my DDoS detection and mitigation application, please copy the "anomaly_detection" folder from the repository to the "~/tutorials/exercises/" directory. Subsequently, execute it in the same manner as the other applications.**
+**4. To run my DDoS detection and mitigation application, please copy the "anomaly_detection_mitigation" folder from the repository to the "~/tutorials/exercises/" directory. Subsequently, execute it in the same manner as the other applications.**
 
 
 **Note:** This application is based on the mri_runtime application and is enhanced by adding additional features for anomaly detection and mitigation.
