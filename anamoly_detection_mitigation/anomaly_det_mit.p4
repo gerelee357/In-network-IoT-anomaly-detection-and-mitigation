@@ -8,7 +8,7 @@ const bit<5>  IPV4_OPTION_MRI = 31;
 
 #define MAX_HOPS 9
 
-// Pipeline behavior states
+// Pipeline behiviour states
 #define NORMAL 0
 #define DETECTION 1
 #define MITIGATION 2
@@ -64,24 +64,23 @@ header switch_t {
     qdepth_t    qdepth;
 }
 
-/*packet-iin talaarh collection of metadata ni pipeline-r bas damjina*/
-/*daraah 2 ni user-defined metadata*/
-/*standard metadata ni standard_metadata_t gesen toroltei baidag */
+/*the collection of metadata about packets is typically done through pipelines*/
+/*Two types of metadata: 1.user-defined metadata
+/*2.standard metadata: standard_metadata_t  */
 
-/*ingress deer uussen metadata*/
+/*user-defined metadata in ingress*/
 struct ingress_metadata_t {
     bit<16>  count;
 }
 
 
-/*parser deer uussen metadata*/
+/*user-defined metadata in parser*/
 struct parser_metadata_t {
     bit<16>  remaining;
 }
 
 
 struct whole_pipeline_metadata_t {
-    // register<bit<8>>(1) states;
     bit<8> dr_state;
 }
 
@@ -139,7 +138,6 @@ parser MyParser(packet_in packet,
 
     state parse_ipv4_option {
         /*
-        * TODO: Add logic to:
         * - Extract the ipv4_option header.
         *   - If value is equal to IPV4_OPTION_MRI, transition to parse_mri.
         *   - Otherwise, accept.
@@ -154,7 +152,6 @@ parser MyParser(packet_in packet,
 
     state parse_mri {
         /*
-        * TODO: Add logic to:
         * - Extract hdr.mri.
         * - Set meta.parser_metadata.remaining to hdr.mri.count
         * - Select on the value of meta.parser_metadata.remaining
@@ -174,8 +171,7 @@ parser MyParser(packet_in packet,
 
     state parse_swtrace {
         /*
-        * TODO: Add logic to:
-        * - Extract hdr.swtraces.next.
+                * - Extract hdr.swtraces.next.
         * - Decrement meta.parser_metadata.remaining by 1
         * - Select on the value of meta.parser_metadata.remaining
         *   - If the value is equal to 0, accept.
@@ -217,16 +213,16 @@ control MyIngress(inout headers hdr,
                        //meta.whole_metadata.dr_state = MITIGATION;
                         behave_states.read(meta.whole_metadata.dr_state,0);
 
-                        // anhnii utga onoogoogui ch ingeed utgiig read hiigeed abch bolj bn, anhnii utga 0 bsan.
+                        // initial value of dr_state is zero
                         //meta.whole_metadata.dr_state = NORMAL;
                         //end packet counter-iin utga deer undesleed state-iig
                         //control plane-s or data plane-s solj bolno
                   }
 
+                  /*meter declaration*/
+                  meter(10, MeterType.packets) my_meter;
 
-                  meter(10, MeterType.packets) my_meter; /*meter declaration*/
-
-                  action m_action(bit<32> meter_index) {   /*packet-iig taglana*/
+                  action m_action(bit<32> meter_index) {   /*packets are tagged.*/
                     my_meter.execute_meter<bit<32>>(meter_index, meta.meter_tag);
                   }
 
@@ -264,15 +260,6 @@ control MyIngress(inout headers hdr,
                   size = 16;
                   }
 
-
-
-
-
-
-
-
-
-
                   action ipv4_forward(macAddr_t dstAddr, egressSpec_t port) {
                       standard_metadata.egress_spec = port;
                       hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
@@ -295,15 +282,9 @@ control MyIngress(inout headers hdr,
                       default_action = NoAction();
                   }
 
-
-
-
-
-
     apply {
 
         port_counter.count((bit<32>)standard_metadata.ingress_port);
-
 
         selecting();
         meta.whole_metadata.dr_state = NORMAL; // end utgiig solj hoyr table-ee shalgah, tur zurr manual-aar state solih
@@ -311,17 +292,12 @@ control MyIngress(inout headers hdr,
 
         ipv4_lpm.apply();
 
-
-
         if(meta.whole_metadata.dr_state==MITIGATION) {
 
            m_read.apply();
            m_filter.apply();
 
         }
-
-
-
         }
 
 }
@@ -364,11 +340,9 @@ control MyEgress(inout headers hdr,
 
 
 
-
-
     action add_swtrace(switchID_t swid) {
         /*
-        * TODO: add logic to:
+        
         - Increment hdr.mri.count by 1
         - Add a new swtrace header by calling push_front(1) on hdr.swtraces.
         - Set hdr.swtraces[0].swid to the id parameter
@@ -530,4 +504,3 @@ MyEgress(),
 MyComputeChecksum(),
 MyDeparser()
 ) main;
-
