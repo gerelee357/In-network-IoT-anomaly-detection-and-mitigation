@@ -5,9 +5,9 @@ The solution utilizes In-band Network telemetry (INT) data to address the challe
 
 ## Features
 
-- Real-time Anomaly Detection: Utilizes INT data to detect IoT attacks in real-time, providing quick response to potential threats.
+- Real-time Anomaly Detection: Utilizes INT data to detect IoT attacks in real-time, providing quick response to DDoS attacks.
 
-- Low Detection Delay: The proposed approach significantly reduces detection delay compared to previous Distributed Denial-of-Service (DDoS) research, ensuring timely detection and mitigation.
+- Low Detection Delay: Implemented directly within the data plane, ensuring real-time processing for every operation.
 
 - High Detection Accuracy: Achieves high detection accuracy, enhancing the security posture of IoT devices within the network.
 
