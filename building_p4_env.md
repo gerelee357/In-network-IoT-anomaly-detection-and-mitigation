@@ -4,17 +4,23 @@
 
 
  **2. Download the following tutorials**
+ 
 	git clone https://github.com/p4lang/tutorials
 	
 **2. Copy vm-ubuntu20.04 to /home/p4.**
+
     cp vm-ubuntu20.04/*  /home/p4
-    then delete tutorials
+    
+    (then delete tutorials)
 
 **3. Run the following scripts to install necessary package.** 
 
 	- sudo     ./root-dev-bootstrap.sh
- when running the following script, if the error is encountered, do the installation manually according to the script. 
+ 
+ When running the following script, if the error is encountered, do the installation manually according to the script. 
+ 
 	- sudo ./user-common-bootstrap.sh  
+ 
 	- sudo ./user-dev-bootstrap.sh
 	
 	
