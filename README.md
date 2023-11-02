@@ -21,7 +21,7 @@ I presented this research at the 12th International Conference on Applied Inform
 
 1. Building SDN environment with INT-enabled Network Devices according to building_p4_env.md.
 
-2. Run the proposed application according to running_p4_apps.md. 
+2. Run the proposed application according to running_p4_applications.md. 
 
 
 
