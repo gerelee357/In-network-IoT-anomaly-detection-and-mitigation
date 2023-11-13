@@ -1,24 +1,35 @@
-## Running P4 applications
- 
-**1. After successfully setting up the environment according to the instructions provided in the "building_p4_env.md" document, proceed to the following directory location.**
+## Running P4 Applications
 
+**1. Start by setting up the environment following the instructions in the "building_p4_env.md" document. Once completed, navigate to the exercises directory:**
+
+```bash
 cd ~/tutorials/exercises/
+```
 
-**2. Upon checking the contents of this directory, you will find P4 applications that have been developed by the P4.org.**
+**2. Check the available P4 applications developed by P4.org in this directory:**
 
+```bash
 ls
+```
 
-basic         ecn           load_balance  multicast  source_routing
-basic_tunnel  firewall      mri           p4runtime
-calc          link_monitor  mri_runtime   qos
+You will see a list of applications, including "basic," "ecn," "load_balance," and others.
 
-**3. To execute a specific application, such as the basic packet forwarding application, navigate to the "basic" directory and initiate the process by running the command "make run."**
+**3. To run a specific application, like the basic packet forwarding application, go to its directory (e.g., "basic") and execute the "make run" command:**
 
+```bash
 cd basic
-
 make run
+```
 
-**4. To run my DDoS detection and mitigation application, please copy the "anomaly_detection_mitigation" folder from the repository to the "~/tutorials/exercises/" directory. Subsequently, execute it in the same manner as the other applications.**
+**4. For running the DDoS detection and mitigation application (anomaly_detection_mitigation), copy the "anomaly_detection_mitigation" folder from the repository to "~/tutorials/exercises/". Then, execute it similarly to other applications.**
 
+```bash
+# Assuming you've copied the folder
+cp -r path/to/anomaly_detection_mitigation ~/tutorials/exercises/
 
-**Note:** This application is based on the mri_runtime application and is enhanced by adding additional features for anomaly detection and mitigation.
+# Navigate to the folder and run the application
+cd ~/tutorials/exercises/anomaly_detection_mitigation
+make run
+```
+
+**Note:** The DDoS detection and mitigation application build upon the mri_runtime application, introducing additional features for enhanced anomaly detection and mitigation. Adjustments and improvements can be made based on specific requirements.
