@@ -2,18 +2,19 @@
 #include <core.p4>
 #include <v1model.p4>
 
+// Constants for protocol types
 const bit<8>  UDP_PROTOCOL = 0x11;
 const bit<16> TYPE_IPV4 = 0x800;
 const bit<5>  IPV4_OPTION_MRI = 31;
 
-#define MAX_HOPS 9
 
-// Pipeline behiviour states
+
+// Pipeline behavior states
 #define NORMAL 0
 #define DETECTION 1
 #define MITIGATION 2
 
-// Packet Classification
+// Packet classification labels
 #define LEGITIMATE 100
 #define MALICIOUS  200
 
@@ -65,7 +66,7 @@ header switch_t {
 }
 
 /*the collection of metadata about packets is typically done through pipelines*/
-/*Two types of metadata: 1.user-defined metadata
+/*Two types of metadata: 1. user-defined metadata
 /*2.standard metadata: standard_metadata_t  */
 
 /*user-defined metadata in ingress*/
@@ -137,11 +138,6 @@ parser MyParser(packet_in packet,
     }
 
     state parse_ipv4_option {
-        /*
-        * - Extract the ipv4_option header.
-        *   - If value is equal to IPV4_OPTION_MRI, transition to parse_mri.
-        *   - Otherwise, accept.
-        */
         packet.extract(hdr.ipv4_option);
         transition select(hdr.ipv4_option.option)  {
             IPV4_OPTION_MRI: parse_mri;
@@ -151,13 +147,6 @@ parser MyParser(packet_in packet,
     }
 
     state parse_mri {
-        /*
-        * - Extract hdr.mri.
-        * - Set meta.parser_metadata.remaining to hdr.mri.count
-        * - Select on the value of meta.parser_metadata.remaining
-        *   - If the value is equal to 0, accept.
-        *   - Otherwise, transition to parse_swtrace.
-        */
         packet.extract(hdr.mri);
         meta.parser_metadata.remaining=hdr.mri.count;
 
@@ -170,13 +159,6 @@ parser MyParser(packet_in packet,
     }
 
     state parse_swtrace {
-        /*
-                * - Extract hdr.swtraces.next.
-        * - Decrement meta.parser_metadata.remaining by 1
-        * - Select on the value of meta.parser_metadata.remaining
-        *   - If the value is equal to 0, accept.
-        *   - Otherwise, transition to parse_swtrace.
-        */
         packet.extract(hdr.swtraces.next);
         meta.parser_metadata.remaining = meta.parser_metadata.remaining -1;
         transition select(meta.parser_metadata.remaining) {
@@ -210,13 +192,9 @@ control MyIngress(inout headers hdr,
 
 
                   action selecting() {
-                       //meta.whole_metadata.dr_state = MITIGATION;
                         behave_states.read(meta.whole_metadata.dr_state,0);
-
                         // initial value of dr_state is zero
                         //meta.whole_metadata.dr_state = NORMAL;
-                        //end packet counter-iin utga deer undesleed state-iig
-                        //control plane-s or data plane-s solj bolno
                   }
 
                   /*meter declaration*/
@@ -236,7 +214,7 @@ control MyIngress(inout headers hdr,
 
                   table m_read {
                     key = {
-                    hdr.ethernet.srcAddr: exact;   /*ethernet hayg taarch baival m_action-iig duudaj tag-iig tabina*/
+                    hdr.ethernet.srcAddr: exact;   /*ethernet address is matched, m_action is invoked and sey a tag*/
                     }
                     actions = {
                     m_action;
@@ -287,7 +265,7 @@ control MyIngress(inout headers hdr,
         port_counter.count((bit<32>)standard_metadata.ingress_port);
 
         selecting();
-        meta.whole_metadata.dr_state = NORMAL; // end utgiig solj hoyr table-ee shalgah, tur zurr manual-aar state solih
+        meta.whole_metadata.dr_state = NORMAL; 
         behave_states.write(0,meta.whole_metadata.dr_state);
 
         ipv4_lpm.apply();
@@ -327,13 +305,11 @@ control MyEgress(inout headers hdr,
         if(mean_qdepth<40) {
             hdr.swtraces[0].qdepth = LEGITIMATE; // normal data
             meta.whole_metadata.dr_state=NORMAL;
-            //behave_states.read(meta.whole_metadata.dr_state, 0); conditiond bichij bolohgui
+           
             }
         else {
             hdr.swtraces[0].qdepth = MALICIOUS; // attack data
             meta.whole_metadata.dr_state=DETECTION;
-            //behave_states.read(meta.whole_metadata.dr_state, 0);
-
             }
 
     }
@@ -341,23 +317,6 @@ control MyEgress(inout headers hdr,
 
 
     action add_swtrace(switchID_t swid) {
-        /*
-        
-        - Increment hdr.mri.count by 1
-        - Add a new swtrace header by calling push_front(1) on hdr.swtraces.
-        - Set hdr.swtraces[0].swid to the id parameter
-        - Set hdr.swtraces[0].qdepth to (qdepth_t)standard_metadata.deq_qdepth
-        - Increment hdr.ipv4.ihl by 2
-        - Increment hdr.ipv4.totalLen by 8
-        - Increment hdr.ipv4_option.optionLength by 8
-        */
-        // res= (qdepth_t)standard_metadata.deq_qdepth;
-
-        // omnoh code deer counter-iig herhen implement hiiseng harah teriig
-        // oilgochuul barag bolno
-        // counter bolon queue depth hadgalahdaa register ashiglahaas oor arga baihgui.
-
-
 
         pkt_counter.read(res, 0);      // Packet Counter
         sum_of_qdepth.read(res1,0);
@@ -380,16 +339,14 @@ control MyEgress(inout headers hdr,
         pkt_counter.read(res, 0);
         sum_of_qdepth.read(res1, 0);
 
-      /*  if(swid==1 && res==128 && meta.whole_metadata.dr_state==NORMAL) {
-            anomaly_detection(res1>>7); No division and modulo operator, so use right bitshift
+        if(swid==1 && res==128 && meta.whole_metadata.dr_state==NORMAL) {
+            anomaly_detection(res1>>7);  //No division and modulo operator, so use the right bitshift
             res=0;
             res1=0;
             }
 
-      **/
-
-        if(swid==1 && meta.whole_metadata.dr_state==NORMAL)
-            hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
+        /*if(swid==1 && meta.whole_metadata.dr_state==NORMAL)
+            hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth; */
 
         else if(swid==1 && meta.whole_metadata.dr_state==DETECTION)
             hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
@@ -411,10 +368,6 @@ control MyEgress(inout headers hdr,
     action add_swtrace1(switchID_t swid) {
           hdr.mri.count = hdr.mri.count + 1;
           hdr.swtraces.push_front(1);
-    // According to the P4_16 spec, pushed elements are invalid, so we need
-    // to call setValid(). Older bmv2 versions would mark the new header(s)
-    // valid automatically (P4_14 behavior), but starting with version 1.11,
-    // bmv2 conforms with the P4_16 spec.
           hdr.swtraces[0].setValid();
           hdr.swtraces[0].swid = swid;
           hdr.swtraces[0].qdepth = (qdepth_t)standard_metadata.deq_qdepth;
@@ -435,11 +388,6 @@ control MyEgress(inout headers hdr,
     }
 
     apply {
-        /*
-        * TODO: add logic to:
-        * - If hdr.mri is valid:
-        *   - Apply table swtrace
-        */
         egress_port_counter.count((bit<32>)standard_metadata.egress_port);
 
 
