@@ -11,11 +11,11 @@ The solution utilizes In-band Network telemetry (INT) data to address the challe
 
 - High Detection Accuracy: Achieves high detection accuracy, enhancing the security posture of IoT devices within the network.
 
-# Publications
+# Publication
 
 I presented this research at the 12th International Conference on Applied Informatics (ICAI 2023) conference and it is accepted for publication in the Infocommunications journal [1].
 
-- [1] Gereltsetseg Altangerel and Máté Tejfel. In-network ddos detection and mitigation using int data for iot ecosystem. Infocommunications Journal, Special Issue on Applied Informatics, 2023, pp. 49-54, 2023.
+- [1] Gereltsetseg Altangerel and Máté Tejfel. In-network DDoS detection and mitigation using int data for IoT ecosystem. Infocommunications Journal, Special Issue on Applied Informatics, 2023, pp. 49-54, 2023.  https://doi.org/10.36244/ICJ.2023.5.8
 
 # Getting Started
 
