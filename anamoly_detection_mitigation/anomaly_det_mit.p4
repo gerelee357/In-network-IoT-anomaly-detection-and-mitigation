@@ -209,6 +209,11 @@ control MyIngress(inout headers hdr,
 
                   counter(512, CounterType.packets_and_bytes) port_counter;
 
+/*Reading State:
+
+At the beginning of packet processing (e.g., in the ingress stage), 
+the current state is read from the global register and stored in the packet's metadata (meta.whole_metadata.dr_state). 
+This allows the current packet to make decisions based on the global state. */
 
                   action selecting() {
                         behave_states.read(meta.whole_metadata.dr_state,0);
