@@ -81,6 +81,23 @@ struct parser_metadata_t {
 }
 
 
+/* 
+Purpose: To maintain the state of the entire pipeline.
+Usage: The dr_state field is used to store the current state of the pipeline
+(NORMAL, DETECTION, MITIGATION). This state is read from and written 
+to a global register, affecting the packet processing logic. 
+*/
+
+/*
+The whole_pipeline_metadata_t is valid for all stages of the pipeline. It allows for shared state 
+information that can be read and written by the parser, ingress, egress, and deparser stages, 
+facilitating coordinated and stateful packet processing across the entire P4 program.
+This design ensures that decisions made at one stage can influence behavior at subsequent stages, 
+enabling complex processing 
+logic such as anomaly detection and response mechanisms.
+*/
+
+
 struct whole_pipeline_metadata_t {
     bit<8> dr_state;
 }
@@ -101,7 +118,9 @@ struct headers {
 }
 
 
-// GLobal register used to store states.
+//  behave_states is a global register in the provided P4 program. 
+Global registers in P4 store state information that can be accessed and modified by different pipeline stages. 
+This allows for stateful processing, where the behavior of the pipeline can change based on the current state stored in the register.*/
 
 register<bit<8>>(1) behave_states;
 
